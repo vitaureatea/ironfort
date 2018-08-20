@@ -32,9 +32,10 @@
                         <p>男</p>
                     {% endif %}
                     <!--<p>{{ pr.sex }}</p>-->
+                    <p><img src="../static/{{ pr.image }}" class="img-circle" alt="User Image"></p>
                     <p>{{ pr.email }}</p>
                     <p>{{ pr.memo }}</p>
-                    <p>{{ pr.image }}</p>
+                    {{ pr.image }}
                     </div>
                 <!--<div class="form-group">-->
                     <!--<label for="id_password">密码:</label>-->
