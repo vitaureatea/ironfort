@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登陆jumpserver</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--给手机等其他终端打开使用的，缩放一类的-->
+    <link rel="stylesheet" href="{%  static 'bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{%  static 'pro.css' %}" />
+
+</head>
+<body>
+
+    <div class="container">
+        <!-- 居中样式-->
+        <div class="col-md-4 col-md-offset-4">
+            {% if message %}
+            <div class="alert alert-warning" role="alert">{{ message }}</div>
+            {% endif %}
+            <h2 class="text-center">修改个人信息</h2>
+            <hr>
+        <form class="form-login" id="jsEditUserForm" autocomplete="off">
+            <ul class="right">
+                        <li>用 户 名：
+                            {{ pr.user }}
+                        </li>
+						<li>性       别：
+							<label>     <input type="radio"  name="gender" value="male" >男</label>
+							<label>      <input type="radio" name="gender" value="female" checked="checked">女</label>
+						</li>
+                        <li>邮       箱：
+                        	<input class="btn btn-default" type="text" name="email"  value=""/>
+                            <!--<span class="green changeemai_btn">[修改]</span>-->
+                    	</li>
+						<li>手  机  号：
+                            <input type="text" name="mobile" id="mobile" placeholder="请输入你的手机号码" value="" maxlength="15">
+                        </li>
+                        <li>个人简介：
+                            <!--<input type="text" name="memo" id="memo" placeholder="请输入你的个人简介" value="比如，我是傻逼" maxlength="200">-->
+                            <textarea name="memo" cols="50" rows="5" class="vLargeTextField" id="id_memo"></textarea>
+                        </li>
+						<li class="button heibtn">
+							<input type="button" id="jsEditUserBtn" value="保存">
+						</li>
+					</ul>
+                    <input type='hidden' name='csrfmiddlewaretoken' value='799Y6iPeEDNSGvrTu3noBrO4MBLv6enY' />
+				</form>
+
+    <script src="{%  static 'plugins/jQuery/jquery-2.2.3.min.js' %}" ></script>
+    <script src="{%  static 'bootstrap/js/bootstrap.min.js' %}" ></script>
+</body>
+</html>

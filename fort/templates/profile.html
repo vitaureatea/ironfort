@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>登陆jumpserver</title>
+    <title>个人中心</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!--给手机等其他终端打开使用的，缩放一类的-->
     <link rel="stylesheet" href="{%  static 'bootstrap/css/bootstrap.min.css' %}" />
@@ -16,28 +16,46 @@
     <div class="container">
         <!-- 居中样式-->
         <div class="col-md-4 col-md-offset-4">
-            <form class="form-login" action="#" method="post">
-                {% if message %}
-                <div class="alert alert-warning" role="alert">{{ message }}</div>
-                {% endif %}
-                {% csrf_token %}
-
-                <h2 class="text-center">个人信息</h2>
-                <hr>
+            {% if message %}
+            <div class="alert alert-warning" role="alert">{{ message }}</div>
+            {% endif %}
+            <h2 class="text-center">个人信息</h2>
+            <hr>
                 {% for pr in pro %}
                     <div class="form-group">
                     <!--<label for="id_username">用户名:</label>-->
                     <!--<input type="text" name="username" class="form-control" id="id_username" placeholder="Username" autofocus required>-->
                     <p><img src="../static/{{ pr.image }}" class="img-circle" alt="User Image"></p>
-                    <p>{{ pr.user }}</p>
-                    {% if pr.sex == 'male' %}
-                        <p>男</p>
-                    {% else %}
-                        <p>女</p>
-                    {% endif %}
+                    <ul class="right">
+						<li>用 户 名：
+                            {{ pr.user }}
+                        </li>
+                        <li>性    别：
+                            {% if pr.sex == 'male' %}
+                                 男
+                            {% else %}
+                                女
+                            {% endif %}
+                        </li>
                     <!--<p>{{ pr.sex }}</p>-->
-                    <p>{{ pr.email }}</p>
-                    <p>{{ pr.memo }}</p>
+                        <li>邮    箱：
+                            {{ pr.email }}
+                        </li>
+                        <li>手机：
+                            {% if pr.mobile is None %}
+
+                            {% else %}
+                                {{ pr.mobile }}
+                            {% endif %}
+                        </li>
+                        <li>个人简介：
+                            {%  if pr.memo is None %}
+
+                            {%  else %}
+                                {{ pr.memo }}
+                            {% endif %}
+                        </li>
+                    </ul>
                     </div>
                 <!--<div class="form-group">-->
                     <!--<label for="id_password">密码:</label>-->
@@ -45,8 +63,13 @@
                 <!--</div>-->
                 {% endfor %}
                 <!--<button type="reset" class="btn btn-default pull-left">重置</button>-->
-                <button type="submit" class="btn btn-default pull-right">修改</button>
-            </form>
+            <!--<form class="form-login" action="/updateprofile/" method="post">-->
+
+                <a class="btn btn-default pull-left" href="/index/">返回</a>
+                <!--<button type="reset" class="btn btn-default pull-left">重置</button>-->
+                <!--<button type="submit" class="btn btn-default pull-right">修改</button>-->
+                <a class="btn btn-default pull-right" href="/updateprofile/">修改</a>
+            <!--</form>-->
         </div>
     </div>
 

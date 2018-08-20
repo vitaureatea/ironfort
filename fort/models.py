@@ -91,7 +91,7 @@ class UserProfile(models.Model):
 
 
 #用户中心表
-class Profile(models.Model):
+class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(unique=True)
 

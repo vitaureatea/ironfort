@@ -58,5 +58,8 @@ def index (request):
 
 @login_required(login_url='/login/')  #进制未登录直接访问首页
 def profile(request):
-    pro = models.Profile.objects.filter(user = request.user)
+    pro = models.UserInfo.objects.filter(user = request.user)
     return render(request,'profile.html',{'pro': pro})
+
+def update_profile(request):
+    return  render(request,'update_profile.html')
