@@ -13,14 +13,14 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username,password=password)
-        print(user)
-        #如果方法执行失败，返货的对象为null
+        # 如果方法执行失败，返货的对象为null
+        request.session['username'] = username
         if user is not  None:
             userprofile = models.UserProfile.objects.get(user=user)
             if userprofile.enabled:
                 #如果账号已启用
                 auth_login(request,user)
-                #因为用的是 django的验证等，所以要让django知道已经登录，
+                #采用django自带longin
                 return redirect('/index/')
             else:
                 message = '账号未启用，请联系管理员'
@@ -28,13 +28,17 @@ def login(request):
         else:
             message = '登陆失败，账号或密码错误'
             return render(request, 'login.html', {'message': message})
-    return render(request, 'login.html', locals())
+    if request.method == 'GET':
+        if request.session.get('username') is not None:
+            return redirect('/index/')
+        else:
+            return render(request, 'login.html', locals())
 
 
 @login_required(login_url='/login/')
 def logout(request):
     auth_logout(request)
-    #我也需要让django知道我已经退出了
+    #django自带退出
     return redirect('/login/')
 
 
