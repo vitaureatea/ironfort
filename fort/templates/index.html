@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}主机账号{% endblock %}
+
+{% block css %}
+    <link href="{% static 'index.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block centent %}
+    <section class="content-header">
+      <h1>
+        主机账号
+        <small>Host List</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/index/"><i class="fa"></i>主页</a></li>
+        <li class="active">主机账号</li>
+      </ol>
+        <hr/>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="table-responsive">
+        <table id="host_table" class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>主机名称</th>
+                    <th>IP地址</th>
+                    <th>端口</th>
+                    <th>用户名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in remote_user_bind_host %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.host.hostname }}</td>
+                    <td>{{ item.host.ip }}</td>
+                    <td>{{ item.host.port }}</td>
+                    <td>{{ item.remote_user.remote_user_name }}</td>
+                    <td>
+                        <span class="hidden">{{ item.id }}</span>
+                        <button type="button" class="btn btn-success">连接</button>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>没有可用帐号</tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+      <div id="term"></div>
+      <div id="disconnect">
+          <button type="button" class="btn btn-danger">关闭连接</button>
+      </div>
+  </section>
+  <!-- /.content -->
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+
+    <script>
+        $(function () {
+            $('#host_table').DataTable({
+              "paging": true,       <!-- 允许分页 -->
+              "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+              "searching": true,    <!-- 允许内容搜索 -->
+              "ordering": true,     <!-- 允许排序 -->
+              "info": true,         <!-- 显示信息 -->
+              "autoWidth": true
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            //点击连接按钮，开启websocket通道，进行数据传输
+            $('#host_table button').click(function () {
+                //获取id(表自动生成的主键),通过id找到对应主机
+                var des_id = $(this).parent().children().first().text();
+                //$this就是指获取到的button.父母.儿子.第一个儿子.的文本内容，就是 item.id 对应主机的id值
+                alert(des_id)
+            });
+        });
+    </script>
+{% endblock %}
