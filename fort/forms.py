@@ -1,7 +1,7 @@
 from django import forms
-from .models import *
+from . import models
 
-class UserInfoForm(forms.ModelForm):
+class UploadImageForm(forms.ModelForm):
     class Meta:
-        model = UserInfo
-        fields = ['email','sex','mobile','memo']
+        model = models.UserInfo
+        fields = ["image"]

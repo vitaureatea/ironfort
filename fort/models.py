@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Host(models.Model):
     hostname = models.CharField(max_length=128,unique=True,verbose_name='远程主机名')
-    ip = models.GenericIPAddressField(verbose_name='主机IP')#做了ip映射，ip可能重复，ip:port 不会重复
+    ip = models.GenericIPAddressField(verbose_name='主机IP') #做了ip映射，ip可能重复，ip:port 不会重复
     port = models.SmallIntegerField(default=22,verbose_name='端口')
     release = models.CharField(max_length=256, default='CentOS', verbose_name='发行版本')
     memo = models.TextField(blank=True, null=True, verbose_name='备注')
@@ -93,21 +93,13 @@ class UserProfile(models.Model):
 #用户中心表
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField(unique=True)
-
-    gender = (
-        ('male', "男"),
-        ('female', "女"),
-    )
-
-    sex = models.CharField(max_length=32, choices=gender, default="男")
-    memo = models.TextField(blank=True, null=True, verbose_name='个人简介')
-    mobile = models.CharField(max_length=11, null=True, blank=True, verbose_name=u'手机号')
-    image = models.ImageField(upload_to='ist/img/userhead/%Y/%m', verbose_name=u'头像',
+    email = models.EmailField(blank=True,null=True)
+    job = models.CharField(max_length=128)
+    image = models.ImageField(upload_to='dist/img/userhead/', verbose_name=u'头像',
                               default=u'dist/img/user2-160x160.jpg', max_length=100)
 
     def __str__(self):
-        return '%s : %s' %(self.user,self.email)
+        return '%s : %s' %(self.user,self.job)
 
     class Meta:
         verbose_name = '堡垒机用户的个人信息'

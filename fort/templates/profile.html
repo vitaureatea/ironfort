@@ -22,53 +22,61 @@
             <h2 class="text-center">个人信息</h2>
             <hr>
                 {% for pr in pro %}
+                <form class="clearfix" id="form" enctype="multipart/form-data"  method="post" action="/image/" >
                     <div class="form-group">
                     <!--<label for="id_username">用户名:</label>-->
                     <!--<input type="text" name="username" class="form-control" id="id_username" placeholder="Username" autofocus required>-->
-                    <p><img src="../static/{{ pr.image }}" class="img-circle" alt="User Image"></p>
-                    <ul class="right">
-						<li>用 户 名：
-                            {{ pr.user }}
-                        </li>
-                        <li>性    别：
-                            {% if pr.sex == 'male' %}
-                                 男
-                            {% else %}
-                                女
-                            {% endif %}
-                        </li>
-                    <!--<p>{{ pr.sex }}</p>-->
-                        <li>邮    箱：
-                            {{ pr.email }}
-                        </li>
-                        <li>手机：
-                            {% if pr.mobile is None %}
+                             <label class="changearea" for="file">
+                                 <span id="avatardiv" class="pic">
+                                    <img src="../static/{{ pr.image }}" class="img-circle" alt="User Image">
+                                </span>
+                                <span class="fl upload-inp-box" style="margin-left:70px;">
+                                    <span class="button btn-green btn-w100 btn btn-default " id="jsAvatarBtn">修改头像</span>
+                                    <input type="file" name="image" id="file" class="js-img-up" style="display: none" onchange="change_head()" name="head"/>
+                                </span>
+                            </label>
+                            <!--<input type='hidden' name='csrfmiddlewaretoken' value='799Y6iPeEDNSGvrTu3noBrO4MBLv6enY ' />-->
+                        {% csrf_token %}
 
-                            {% else %}
-                                {{ pr.mobile }}
-                            {% endif %}
-                        </li>
-                        <li>个人简介：
-                            {%  if pr.memo is None %}
-
-                            {%  else %}
-                                {{ pr.memo }}
-                            {% endif %}
-                        </li>
-                    </ul>
+                        <ul class="right">
+						    <li>用 户 名：
+                                {{ pr.user }}
+                            </li>
+                            <li>职务：
+                                {{ pr.job }}
+                            </li>
+                            <li>邮    箱：
+                                {{ pr.email }}
+                            </li>
+                        </ul>
                     </div>
                 <!--<div class="form-group">-->
                     <!--<label for="id_password">密码:</label>-->
                     <!--<input type="password" name="password" class="form-control" id="id_password" placeholder="Password" required>-->
                 <!--</div>-->
-                {% endfor %}
                 <!--<button type="reset" class="btn btn-default pull-left">重置</button>-->
             <!--<form class="form-login" action="/updateprofile/" method="post">-->
-
-                <a class="btn btn-default pull-left" href="/index/">返回</a>
+                    {% endfor %}
+                    <a class="btn btn-default pull-left" href="/index/">返回</a>
+                    <button type="submit" class="btn btn-default pull-right ">完成</button>
+                </form>
                 <!--<button type="reset" class="btn btn-default pull-left">重置</button>-->
                 <!--<button type="submit" class="btn btn-default pull-right">修改</button>-->
-                <a class="btn btn-default pull-right" href="/updateprofile/">修改</a>
+                <!--<a class="btn btn-default pull-right" href="/updateprofile/">修改头像</a>-->
+
+            <!--</form>-->
+            <!--<form class="clearfix" id="jsAvatarForm" enctype="multipart/form-data" autocomplete="off" method="post" action="#" target='frameFile'>-->
+                <!--<label class="changearea" for="avatarUp">-->
+                    <!--<span id="avatardiv" class="pic">-->
+                        <!--<img width="100" height="100" class="js-img-show" id="avatarShow" src="../static/{{ pr.image }}"/>-->
+                    <!--</span>-->
+                    <!--<span class="fl upload-inp-box" style="margin-left:70px;">-->
+                        <!--<span class="button btn-green btn-w100" id="jsAvatarBtn">修改头像</span>-->
+                        <!--<input type="file" name="image" id="avatarUp" class="js-img-up"/>-->
+                    <!--</span>-->
+                <!--</label>-->
+                <!--<input type='hidden' name='csrfmiddlewaretoken' value='799Y6iPeEDNSGvrTu3noBrO4MBLv6enY' />-->
+                <!--{% csrf_token %}-->
             <!--</form>-->
         </div>
     </div>

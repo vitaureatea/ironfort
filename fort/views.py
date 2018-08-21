@@ -2,11 +2,11 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-#由于之前使用的django自带的User表，这里使用django自带的 auth方法
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from . import models
-
+import random,os
+from PIL import Image
 
 def login(request):
     if request.method == 'POST':
@@ -17,6 +17,7 @@ def login(request):
         request.session['username'] = username
         if user is not  None:
             userprofile = models.UserProfile.objects.get(user=user)
+            print(userprofile)
             if userprofile.enabled:
                 #如果账号已启用
                 auth_login(request,user)
@@ -61,5 +62,32 @@ def profile(request):
     pro = models.UserInfo.objects.filter(user = request.user)
     return render(request,'profile.html',{'pro': pro})
 
-def update_profile(request):
-    return  render(request,'update_profile.html')
+@login_required
+def update_head(request):
+    if request.method == 'POST':
+        #user = getattr(request, 'user', None)
+        info = models.UserInfo.objects.get(user = request.user)
+        # 在更新头像之前 先删除掉以前的头像
+        # 担心误操作已经删除过头像所以这这里try一下
+        try:
+            os.remove('./fort/static/dist/img/userhead/' + str(info.image))
+        except:
+            pass
+
+        # 获取上传的文件对象
+        image = request.FILES.get('image')
+        print(image)
+        filename = ''.join([random.choice('1324345656789ewretrytuyusfdgfh') for i in range(20)]) + os.path.splitext(image.name)[1]
+        full_path = './fort/static/dist/img/userhead/' + str(filename)
+        with open(full_path, 'wb') as file:
+            for chunk in image.chunks():
+                file.write(chunk)
+        if info:
+            # 保存数据库
+            info.image = 'dist/img/userhead/' + str(filename)
+            info.save()
+            #做成缩略图
+            img = Image.open(full_path)
+            img.thumbnail((160, 160))
+            img.save(full_path)
+    return redirect('/profile/')
