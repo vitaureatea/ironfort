@@ -54,7 +54,8 @@ def index (request):
     #联合查询，Q 都好表示和and | 表示或   enable为必须条件，下面俩有一个就行了
     #账号本身能访问的 主机，以及账户所属组能访问的主机
     #.distinct() 去重
-    return render(request,'index.html',{'remote_user_bind_host': remote_user_bind_host})
+    pro = models.UserInfo.objects.filter(user=request.user)
+    return render(request,'index.html',{'remote_user_bind_host': remote_user_bind_host,'pro': pro},)
 
 
 @login_required(login_url='/login/')  #进制未登录直接访问首页
@@ -70,7 +71,7 @@ def update_head(request):
         # 在更新头像之前 先删除掉以前的头像
         # 担心误操作已经删除过头像所以这这里try一下
         try:
-            os.remove('./fort/static/dist/img/userhead/' + str(info.image))
+            os.remove('./fort/static/' + str(info.image))
         except:
             pass
 
