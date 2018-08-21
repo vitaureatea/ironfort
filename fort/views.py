@@ -89,6 +89,6 @@ def update_head(request):
             info.save()
             #做成缩略图
             img = Image.open(full_path)
-            img.thumbnail((160, 160))
+            img.thumbnail((160,160))
             img.save(full_path)
     return redirect('/profile/')

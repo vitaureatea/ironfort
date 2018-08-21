@@ -7,47 +7,21 @@
 {% endblock %}
 
 {% block uimage %}
-<div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-          <!-- User Account: style can be found in dropdown.less -->
+{% for pr in pro %}
+<img src="../static/{{ pr.image }}" class="user-image" alt="User Image">
+{% endfor %}
+{% endblock %}
 
-          <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                {% for pr in pro %}
-              <img src="../static/{{ pr.image }}" class="img-circle" alt="User Image">
-                {% endfor %}
-              <span class="hidden-xs">{{ request.user }}</span>
-            </a>
-            <ul class="dropdown-menu">
-              <!-- User image -->
-              <li class="user-header">
-                <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image">
+{% block simage %}
+{% for pr in pro %}
+<img src="../static/{{ pr.image }}" class="img-circle" alt="User Image">
+{% endfor %}
+{% endblock %}
 
-                <p>
-                  {{ request.user }}
-                  <!--<small>Member since Nov. 2012</small>-->
-                </p>
-              </li>
-              <!-- Menu Body -->
-
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="/profile/" class="btn btn-default btn-flat">个人中心</a>
-                </div>
-                <div class="pull-right">
-                  <a href="/logout/" class="btn btn-default btn-flat">登出</a>
-                </div>
-              </li>
-            </ul>
-          </li>
-
-          <!-- Control Sidebar Toggle Button -->
-          <!--<li>-->
-            <!--<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>-->
-          <!--</li>-->
-        </ul>
-      </div>
+{% block timage %}
+{% for pr in pro %}
+<img src="../static/{{ pr.image }}" class="user-image" alt="User Image">
+{% endfor %}
 {% endblock %}
 
 {% block centent %}
@@ -109,6 +83,7 @@
 {% block script %}
     <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'ironssh.js' %}"></script>
 
     <script>
         $(function () {
@@ -125,13 +100,22 @@
 
 
     <script>
+        function openTerminal(options) {
+            //创建websocket通道
+            var client = new IronSSSHClient();
+        }
+
         $(document).ready(function () {
             //点击连接按钮，开启websocket通道，进行数据传输
             $('#host_table button').click(function () {
                 //获取id(表自动生成的主键),通过id找到对应主机
                 var des_id = $(this).parent().children().first().text();
                 //$this就是指获取到的button.父母.儿子.第一个儿子.的文本内容，就是 item.id 对应主机的id值
-                alert(des_id)
+                var options = {
+                    des_id: des_id
+                };
+                //打开web模拟终端
+                openTerminal(options);
             });
         });
     </script>
