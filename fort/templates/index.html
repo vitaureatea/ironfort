@@ -83,7 +83,9 @@
 {% block script %}
     <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'term.js' %}"></script>
     <script src="{% static 'ironssh.js' %}"></script>
+
 
     <script>
         $(function () {
@@ -103,11 +105,52 @@
         function openTerminal(options) {
             //创建websocket通道
             var client = new IronSSSHClient();
+            var term = new Terminal(
+                {
+                        cols:80,
+                        rows:24,
+                        handler:function(key){client.send(key);},
+                        screenKeys:true,
+                        useStyle:true,
+                        cursorBlink:true
+                    }
+            );
+            term.open();
+            $('.terminal').detach().appendTo('#term');
+            term.write('开始连接......');
+            client.connect(
+                    //拓展iptions，再往里加一些方法
+                    $.extend(options,
+                            {
+                                onError:function (error) {term.write('错误： ' + error + '\r\n');},
+                                onConnect:function () {term.write('\r');},
+                                onClose:function () {term.write('对方断开了连接.......');}, //term.destroy();
+                                onData:function (data) {term.write(data);}
+                            }
+                    )
+            );
         }
+    </script>
 
+    <script>
         $(document).ready(function () {
+            //初始化情况下，关闭链接的按钮是隐藏的
+            $('#disconnect').hide();
+
+            //点击关闭链接，清除终端div中的内容，显示表格。需要先在终端内exit退出ssh链接！
+            $('#disconnect button').click(function () {
+                $('#term').empty();
+                $('div.table-responsive').show();
+                $('#disconnect').hide();
+            });
+
+
             //点击连接按钮，开启websocket通道，进行数据传输
             $('#host_table button').click(function () {
+                //并且隐藏主机列表
+                $('div.table-responsive').hide();
+                // 并且把关闭连接按钮显示出来
+                $('#disconnect').show();
                 //获取id(表自动生成的主键),通过id找到对应主机
                 var des_id = $(this).parent().children().first().text();
                 //$this就是指获取到的button.父母.儿子.第一个儿子.的文本内容，就是 item.id 对应主机的id值

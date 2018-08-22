@@ -17,7 +17,7 @@ IronSSSHClient.prototype._generateURL = function (options) {
 
 
 //连接方法
-IronSSSHClient.prototype.connec = function (options) {
+IronSSSHClient.prototype.connect = function (options) {
     //调用上方的_generateURL url方法
     var des_url = this._generateURL(options);
     //判断浏览器是否支持websocket 生成一个websocket对象
@@ -27,7 +27,7 @@ IronSSSHClient.prototype.connec = function (options) {
         //火狐比较特殊
         this._connection = new MozWebSocket(des_url);
     }else {
-        options.onerror('小白您好，您当前浏览器不支持websocket');
+        options.onError('小白您好，您当前浏览器不支持websocket');
         return;
     }
     //开启链接的时候
@@ -37,5 +37,22 @@ IronSSSHClient.prototype.connec = function (options) {
     //有消息过来的时候
     this._connection.message = function (evt) {
         var data = JSON.parse(evt.data.toString());
+        // 如果传过来的数据里定义了error，说明有错误
+        if (data.error !== undefined ) {
+            options.onError(data.error);
+        }else {
+            options.onData(data.data)
+        }
     };
+
+    this._connection.onclose = function (evt) {
+        options.onClose();
+    };
+};
+
+
+//发送方法
+IronSSHClient.prototype.send = function (data) {
+    this._connection.send(JSON.stringify({'data':data}));
+
 };
