@@ -94,7 +94,7 @@ class UserProfile(models.Model):
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(blank=True,null=True)
-    job = models.CharField(max_length=128)
+    job = models.CharField(max_length=128,verbose_name='职位')
     image = models.ImageField(upload_to='dist/img/userhead/', verbose_name=u'头像',
                               default=u'dist/img/user2-160x160.jpg', max_length=100)
 

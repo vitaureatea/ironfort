@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'fort',
 ]
+
+SUIT_CONFIG = {  # suit页面配置
+    'ADMIN_NAME': 'Jumpserver配置平台',  # 登录界面提示
+    'LIST_PER_PAGE': 20,  # 表中显示行数
+    'MENU': ({'label': u'用户管理', 'app': 'auth',
+              'icon': 'icon-lock',  # 显示左边菜单的图标
+              'models': ('auth.User', 'auth.Group')},  # 每一个字典表示左侧菜单的一栏
+             {'label': u'跳板机管理', 'app': 'fort',
+              'models': ('fort.Host','fort.RemoteUser','fort.RemoteUserBindHost','fort.UserProfile','fort.UserInfo','fort.Group')},
+             ),
+    # label表示name，app表示上边的install的app，models表示用了哪些models
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
