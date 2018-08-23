@@ -108,7 +108,7 @@
       <ul class="sidebar-menu">
         <li class="header">导航栏</li>
         <li class="treeview">
-          <a href="#">
+          <a href="/index/">
             <i class="fa fa-laptop"></i> <span>主机账号</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -120,7 +120,7 @@
           <!--</ul>-->
         </li>
         <li class="treeview">
-          <a href="#">
+          <a href="/log/">
             <i class="fa fa-file-text"></i> <span>日志系统</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -370,6 +370,21 @@
 <script src="{%  static 'bootstrap/js/bootstrap.min.js' %}"></script>
 <!-- AdminLTE App -->
 <script src="{%  static 'dist/js/app.min.js' %}"></script>
+
+<script>
+  //选中高亮
+  $(document).ready(function () {
+
+    $('ul.sidebar-menu').find('a').each(function () {
+      if(this.href == document.location.href || document.location.href.search(this.href) >= 0){
+          //如果 这个标签的href的uri 等于 当前浏览器的 ur 或者 当前浏览器的地址去里 查询 到 这个标签的href的uri 大于o个
+        $(this).parent().addClass('active');
+        //就给这个查到的a标签 加一个 active class
+      }
+    });
+
+  });
+</script>
 
 {% block script %}{% endblock %}
 

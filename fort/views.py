@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -7,6 +7,8 @@ from django.db.models import Q
 from . import models
 import random,os
 from PIL import Image
+
+
 
 def login(request):
     if request.method == 'POST':
@@ -36,11 +38,13 @@ def login(request):
             return render(request, 'login.html', locals())
 
 
+
 @login_required(login_url='/login/')
 def logout(request):
     auth_logout(request)
     #django自带退出
     return redirect('/login/')
+
 
 
 @login_required(login_url='/login/')  #进制未登录直接访问首页
@@ -58,10 +62,14 @@ def index (request):
     return render(request,'index.html',{'remote_user_bind_host': remote_user_bind_host,'pro': pro},)
 
 
+
+
 @login_required(login_url='/login/')  #进制未登录直接访问首页
 def profile(request):
     pro = models.UserInfo.objects.filter(user = request.user)
     return render(request,'profile.html',{'pro': pro})
+
+
 
 @login_required
 def update_head(request):
@@ -92,3 +100,21 @@ def update_head(request):
             img.thumbnail((160,160))
             img.save(full_path)
     return redirect('/profile/')
+
+
+
+@login_required
+def connect(request, user_bind_host_id):
+    # 　如果当前请求不是websocket请求则退出
+    if not request.environ.get('wsgi.websocket'):
+        return HttpResponse('错误，非websocket请求！')
+    try:
+        remote_user_bind_host = models.RemoteUserBindHost.objects.filter(
+            Q(enabled=True),
+            Q(id=user_bind_host_id),
+            Q(userprofile__user=request.user) | Q(group__userprofile__user=request.user)).distinct()[0]
+            #和上面一样，账户是启用的而且 机器id是参数id ，账户也是有这个权限的，或者所属组有权限的
+    except Exception as e:
+        message = '无效的账户或者无权访问！\n' + str(e)
+        #add_log(request.user, message, log_type='2')
+        return HttpResponse('请求主机发生错误！')
