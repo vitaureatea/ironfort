@@ -104,3 +104,28 @@ class UserInfo(models.Model):
     class Meta:
         verbose_name = '堡垒机用户的个人信息'
         verbose_name_plural = '堡垒机用户的个人信息'
+
+
+
+#日志
+class AccessLog(models.Model):
+    log_type_choices = (
+        ('0', 'DEBUG'),
+        ('1', 'INFO'),
+        ('2', 'WARNING'),
+        ('3', 'ERROR'),
+        ('4', 'CRITICAL'),
+    )
+    user = models.ForeignKey(User, blank=True, null=True, verbose_name='产生日志的用户', on_delete=models.SET_NULL)
+    #on_delete=models.SET_NULL 当外键的用户被删时，对应的日志不会被删，设为null
+    log_type = models.CharField(max_length=32, choices=log_type_choices, default='1', verbose_name='日志类型')
+    content = models.TextField()
+    c_time = models.DateTimeField(auto_now_add=True, verbose_name='记录时间')
+
+    def __str__(self):
+        return '%s < %s >  记录时间： <%s>' % (self.user.userprofile.user_type, self.user.username, self.c_time)
+
+    class Meta:
+        verbose_name = '堡垒机用户行为日志'
+        verbose_name_plural = '堡垒机用户行为日志'
+        ordering = ['-c_time']

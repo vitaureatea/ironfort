@@ -28,7 +28,8 @@ urlpatterns = [
     path('profile/',views.profile),
     path('image/',views.update_head),
     #匹配websocket传过来的ws url
-    path('host/<int:user_bind_host_id>/',views.connect)
+    path('host/<int:user_bind_host_id>/',views.connect),
+    path('log/',views.get_log),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 #让静态文件的路由 使用settings里的两个值，第二个值默认没有需要自己写，指定静态文件的目录位置
 #http://10.211.55.12:8000/static/plugins/jQuery/jquery-2.2.3.min.js

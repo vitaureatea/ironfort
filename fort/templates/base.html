@@ -104,7 +104,7 @@
         </div>
       </div>
 
-      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <!-- sidebar menu: : style can be found in sidebar.less  侧边菜单-->
       <ul class="sidebar-menu">
         <li class="header">导航栏</li>
         <li class="treeview">
@@ -119,6 +119,7 @@
             <!--<li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>-->
           <!--</ul>-->
         </li>
+        {% if request.user.is_superuser %}
         <li class="treeview">
           <a href="/log/">
             <i class="fa fa-file-text"></i> <span>日志系统</span>
@@ -127,6 +128,7 @@
             </span>
           </a>
         </li>
+        {% endif %}
       </ul>
     </section>
     <!-- /.sidebar -->

@@ -7,6 +7,7 @@ from django.db.models import Q
 from . import models
 import random,os
 from PIL import Image
+from .server import WSSHBridge,add_log
 
 
 
@@ -71,7 +72,7 @@ def profile(request):
 
 
 
-@login_required
+@login_required(login_url='/login/')
 def update_head(request):
     if request.method == 'POST':
         if request.FILES.get('image'):
@@ -106,7 +107,7 @@ def update_head(request):
 
 
 
-@login_required
+@login_required(login_url='/login/')
 def connect(request, user_bind_host_id):
     # 　如果当前请求不是websocket请求则退出
     if not request.environ.get('wsgi.websocket'):
@@ -119,5 +120,53 @@ def connect(request, user_bind_host_id):
             #和上面一样，账户是启用的而且 机器id是参数id ，账户也是有这个权限的，或者所属组有权限的
     except Exception as e:
         message = '无效的账户或者无权访问！\n' + str(e)
-        #add_log(request.user, message, log_type='2')
-        return HttpResponse('请求主机发生错误！')
+        add_log(request.user, message, log_type='3')
+        return HttpResponse('请求主机发生错误')
+
+    message = '来自{remote}的请求 尝试连接 -> {username} @ {hostname}  <{ip} : {port}>'.format(
+        remote=request.META.get('REMOTE_ADDR'),
+        username=remote_user_bind_host.remote_user.remote_user_name,
+        hostname=remote_user_bind_host.host.hostname,
+        ip=remote_user_bind_host.host.ip,
+        port=remote_user_bind_host.host.port
+    )
+    add_log(request.user, message, log_type='2')
+    print(message)
+
+    #创建对象
+    bridge = WSSHBridge(request.environ.get('wsgi.websocket'),request.user)
+
+    #调用open方法
+    try:
+        bridge.open(
+            host_ip=remote_user_bind_host.host.ip,
+            port=remote_user_bind_host.host.port,
+            username=remote_user_bind_host.remote_user.remote_user_name,
+            password=remote_user_bind_host.remote_user.password
+        )
+    except Exception as e:
+        message = '尝试连接{0}的过程中发生错误：\n {1}'.format(
+            remote_user_bind_host.remote_user.remote_user_name, e)
+        print(message)
+        add_log(request.user, message, log_type='3')
+        return HttpResponse("错误！无法建立SSH连接！")
+
+    #最主要的数据通信就一行
+    bridge.shell()
+
+    #关闭websocket
+    request.environ.get('wsgi.websocket').close()
+    print('用户断开连接')
+    return HttpResponse('200')
+
+
+@login_required(login_url='/login/')
+def get_log(request):
+    #判断超级用户
+    if request.user.is_superuser:
+        logs = models.AccessLog.objects.all()
+        pro = models.UserInfo.objects.filter(user=request.user)
+        return render(request,'log.html',{'logs': logs,'pro': pro})
+    else:
+        add_log(request.user,'非超级用户尝试访问日志',logs_type='3')
+        return redirect('/index/')

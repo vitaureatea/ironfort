@@ -66,7 +66,7 @@ admin.site.register(models.RemoteUserBindHost,RemoteUserBindHostAdmin)
 admin.site.register(models.UserProfile,UserProfileAdmin)
 admin.site.register(models.UserInfo,UserInfoAdmin)
 admin.site.register(models.Group,GroupAdmin)
-
+admin.site.register(models.AccessLog)
 
 
 
