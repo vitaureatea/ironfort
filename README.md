@@ -11,3 +11,26 @@
 ``` bash
 git clone https://github.com/vitaureatea/ironfort.git
 ```
+### 2. 配置项目
+```
+# 安装python依赖
+cd ironfort
+pip install -r requirements.txt
+
+# 配置数据库
+settings.py 
+本项目使用mysql数据库，pymysql模块
+
+# 生成数据库文件
+python manage.py makemigrations 
+
+#初始化数据库
+python manage.py migrate
+
+#创建admin用户
+python manage.py createsuperuser 
+
+#启动
+#默认为0.0.0.0：8000
+cd ironfort
+python start_jump.py  
