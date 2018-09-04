@@ -55,16 +55,16 @@ class RemoteUserBindHost(models.Model):
 
 
 class Group(models.Model):
-    group_name = models.CharField(max_length=128, unique=True, verbose_name='堡垒机用户组名')
-    remote_user_bind_hosts = models.ManyToManyField('RemoteUserBindHost', blank=True, verbose_name='组内关联的远程用户')
+    group_name = models.CharField(max_length=128, unique=True, verbose_name='主机组名')
+    remote_user_bind_hosts = models.ManyToManyField('RemoteUserBindHost', blank=True,verbose_name='组内关联的远程用户')
     memo = models.TextField(blank=True, null=True, verbose_name='备注')
 
     def __str__(self):
-        return '堡垒机用户组： %s' % self.group_name
+        return '主机组： %s' % self.group_name
 
     class Meta:
-        verbose_name = '堡垒机用户组'
-        verbose_name_plural = '堡垒机用户组'
+        verbose_name = '主机组'
+        verbose_name_plural = '主机组'
 
 
 #堡垒机用户表
@@ -79,7 +79,7 @@ class UserProfile(models.Model):
     )
     user_type = models.CharField(max_length=4, choices=user_type_chiose,default='普通用户', verbose_name='用户类型')
     remote_user_bind_hosts = models.ManyToManyField('RemoteUserBindHost', blank=True, verbose_name='堡垒机用户关联的远程用户')
-    groups = models.ManyToManyField('Group', blank=True, verbose_name='所属堡垒机用户组')
+    groups = models.ManyToManyField('Group', blank=True, verbose_name='所属堡垒机组')
     enabled = models.BooleanField(default=True, verbose_name='是否可以登录堡垒机')
 
     def __str__(self):

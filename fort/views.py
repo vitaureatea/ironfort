@@ -170,3 +170,12 @@ def get_log(request):
     else:
         add_log(request.user,'非超级用户尝试访问日志',logs_type='3')
         return redirect('/index/')
+
+
+def host_mgr(request):
+    pro = models.UserInfo.objects.filter(user=request.user)
+    remote_user_bind_host = models.RemoteUserBindHost.objects.filter(
+        Q(enabled=True),
+        Q(userprofile__user=request.user) | Q(group__userprofile__user=request.user)
+    ).distinct()
+    return render(request,'host_mgr.html',{'remote_user_bind_host': remote_user_bind_host ,'pro': pro})

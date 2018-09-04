@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}管理系统{% endblock %}
+
+{% block css %}
+    <link href="{% static 'index.css' %}" rel="stylesheet" />
+    <link href="{% static 'nifty.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'pace.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block uimage %}
+{% for pr in pro %}
+<img src="../../static/{{ pr.image }}" class="user-image" alt="User Image">
+{% endfor %}
+{% endblock %}
+
+{% block simage %}
+{% for pr in pro %}
+<img src="../../static/{{ pr.image }}" class="img-circle" alt="User Image">
+{% endfor %}
+{% endblock %}
+
+{% block timage %}
+{% for pr in pro %}
+<img src="../../static/{{ pr.image }}" class="img-circle" alt="User Image">
+{% endfor %}
+{% endblock %}
+
+{% block centent %}
+
+<div class="row">
+        {% include 'host_list_component.html' %}
+
+        <div class="col-sm-9">
+            <div class="panel ">
+                <div class="panel-heading">
+                    <h3 class="panel-title">命令操作</h3>
+                </div>
+                <div class="panel-body">
+                    <textarea  id="cmd_input" class="form-control" placeholder="input your cmd...."> </textarea>
+
+                    <input type="button"  id="task_submit_btn" onclick="PostTask(this,'cmd')" class="btn btn-success pull-right" value="执行命令">
+                </div>
+            </div>
+
+
+
+            {% include 'task_result_component.html' %}
+
+        </div>
+
+  </div>
+{% include 'multitask_js_component.html' %}
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'fastclick.min.js' %}"></script>
+<script src="{% static 'nifty.min.js' %}"></script>
+<script src="{% static 'pace.min.js' %}"></script>
+<script src="{% static 'multitask_js_component.js' %}"></script>
+{% endblock %}
