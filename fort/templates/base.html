@@ -128,6 +128,19 @@
             </span>
           </a>
         </li>
+
+        <li class="treeview">
+          <a id="gl" href="#">
+            <i class="fa fa-file-text" ></i> <span>管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="collapse in" id="pl">
+				<li><a href="#">批量命令</a></li>
+				<li class=""><a href="#">批量文件传送</a></li>
+          </ul>
+        </li>
         {% endif %}
       </ul>
     </section>
@@ -387,7 +400,15 @@
 
   });
 </script>
-
+<script>
+  $(document).ready(function () {
+      //管理二级菜单
+      $('#pl').hide();
+      $('#gl').click(function () {
+          $('#pl').show();
+      })
+  })
+</script>
 {% block script %}{% endblock %}
 
 </body>

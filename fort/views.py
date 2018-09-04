@@ -1,6 +1,5 @@
 from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate
-#此为django的auth认证
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
