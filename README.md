@@ -4,14 +4,18 @@
 [![websocket](https://img.shields.io/badge/websocket-green.svg)](https://github.com/search?q=websocket)
 
 
-跳板机目前只有操作记录查询功能，和webssh功能
+跳板机目前只有操作记录查询功能，和webssh功能，以及很low的命令行shell
 
 ## 项目部署
 ### 1. 克隆项目
 ``` bash
 git clone https://github.com/vitaureatea/ironfort.git
 ```
-### 2. 配置项目
+### 2. 环境依赖
+```
+#mysql
+```
+### 3. 配置项目
 ```
 # 安装python依赖
 cd ironfort
