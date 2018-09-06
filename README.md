@@ -38,3 +38,7 @@ python manage.py createsuperuser
 #默认为0.0.0.0：8000
 cd ironfort
 python start_jump.py  
+```
+###4. 未来打算
+1，批量执行命令
+2，批量分发文件
