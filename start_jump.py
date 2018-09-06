@@ -30,12 +30,11 @@ args = parser.parse_args()
 
 print('\033[31mJumpserver\033[0m {0}  running on  {1} : {2}'.format(version, args.host, args.port))
 
-
 #创建gevent服务器
 ws_server = WSGIServer(
     (args.host, args.port),
     application,
-    log=None,
+    #log=None
     handler_class=WebSocketHandler
 )
 
