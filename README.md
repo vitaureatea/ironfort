@@ -13,7 +13,8 @@ git clone https://github.com/vitaureatea/ironfort.git
 ```
 ### 2. 环境依赖
 ```
-#mysql
+#mysql5.7
+#Linux
 ```
 ### 3. 配置项目
 ```
