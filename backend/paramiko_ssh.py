@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright (C) 2003-2007  Robey Pointer <robeypointer@gmail.com>
 #
 # This file is part of paramiko.
@@ -130,23 +128,23 @@ def ssh_connect(ssh_handler_instance,host_to_user_obj):
         chan.host_to_user_obj = host_to_user_obj
         chan.models = ssh_handler_instance.models
         print('*** Here we go!\n')
-        # ssh_handler_instance.models.AuditLog.objects.create(
-        #     user = ssh_handler_instance.user ,
-        #     log_type = 0 ,
-        #     host_to_remote_user = host_to_user_obj,
-        #     content = "***user login***"
-        # )
+        ssh_handler_instance.models.AccessLog.objects.create(
+            user = ssh_handler_instance.user ,
+            log_type = 2 ,
+            #host_to_remote_user = host_to_user_obj,
+            content = "***user login***,%s" %host_to_user_obj.host
+        )
 
         interactive.interactive_shell(chan)
         chan.close()
         t.close()
 
-        # ssh_handler_instance.models.AuditLog.objects.create(
-        #     user=ssh_handler_instance.user,
-        #     log_type=2,
-        #     host_to_remote_user=host_to_user_obj,
-        #     content="***user logout***"
-        # )
+        ssh_handler_instance.models.AccessLog.objects.create(
+            user=ssh_handler_instance.user,
+            log_type=2,
+            #host_to_remote_user=host_to_user_obj,
+            content="***user logout***,%s" %host_to_user_obj.host
+        )
 
     except Exception as e:
         print('*** Caught exception: ' + str(e.__class__) + ': ' + str(e))

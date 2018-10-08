@@ -5,7 +5,7 @@ class Host(models.Model):
     hostname = models.CharField(max_length=128,unique=True,verbose_name='远程主机名')
     ip = models.GenericIPAddressField(verbose_name='主机IP') #做了ip映射，ip可能重复，ip:port 不会重复
     port = models.SmallIntegerField(default=22,verbose_name='端口')
-    release = models.CharField(max_length=256, default='CentOS', verbose_name='发行版本')
+    release = models.CharField(max_length=255, default='CentOS', verbose_name='发行版本')
     memo = models.TextField(blank=True, null=True, verbose_name='备注')
 
     def __str__(self):

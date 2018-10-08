@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': 'ironfort',
         'USER': 'root',  # 用户名，可以自己创建用户
         'PASSWORD': '!@#$QWEr1109',  # 密码
-        'HOST': '192.168.179.128',  # mysql服务所在的主机ip
+        'HOST': '192.168.179.130',  # mysql服务所在的主机ip
         'PORT': '3306',
     }
 }

@@ -70,12 +70,12 @@ def posix_shell(chan):
                     # print('input>', ''.join(cmd))
                     # log = "%s   %s\n" %(time.strftime("%Y-%m-%d %X", time.gmtime()), ''.join(cmd))
                     # print(log)
-                    # chan.models.AuditLog.objects.create(
-                    #     user=chan.crazyeye_account,
-                    #     log_type=1,
-                    #     host_to_remote_user=chan.host_to_user_obj,
-                    #     content=''.join(cmd)
-                    # )
+                    chan.models.AccessLog.objects.create(
+                        user=chan.crazyeye_account,
+                        log_type=1,
+                        #host_to_remote_user=chan.host_to_user_obj,
+                        content=''.join(cmd)
+                    )
                     # f.write(log)
                     # 如果没有回车，那就继续在列表里追加字母
                     cmd = []
