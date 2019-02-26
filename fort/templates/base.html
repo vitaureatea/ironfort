@@ -34,7 +34,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>J</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Jumpserver&nbsp;&nbsp;</b></span>
+      <span class="logo-lg"><b>Lj系统&nbsp;&nbsp;</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -49,17 +49,17 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              {% block uimage %}
+{#              {% block uimage %}#}
               <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image">
-              {% endblock %}
+{#              {% endblock %}#}
               <span class="hidden-xs">{{ request.user }}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                {% block simage %}
+{#                {% block simage %}#}
                 <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image">
-                {% endblock %}
+{#                {% endblock %}#}
                 <p>
                   {{ request.user }}
                   <!--<small>Member since Nov. 2012</small>-->
@@ -131,16 +131,16 @@
         </li>
 
         <li class="treeview">
-          <a id="gl" href="#">
-            <i class="fa fa-file-text" ></i> <span>管理</span>
+          <a href="/upfile/">
+            <i class="fa fa-file-text" ></i> <span>文件传输</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="collapse in" id="pl">
-				<li><a href="#">批量命令</a></li>
-				<li class=""><a href="#">批量文件传送</a></li>
-          </ul>
+{#          <ul class="collapse in" id="pl">#}
+{#				<li><a href="#">批量命令</a></li>#}
+{#				<li class=""><a href="#">文件传送</a></li>#}
+{#          </ul>#}
         </li>
         {% endif %}
       </ul>
@@ -173,7 +173,7 @@
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.3.6
     </div>
-    <strong>Copyright &copy; 2018-2019 <a href="#">Jumpserver</a>.</strong> All rights
+    <strong>Copyright &copy; 2018-2019 <a href="#">Vitaureatea</a>.</strong> All rights
     reserved.
   </footer>
 

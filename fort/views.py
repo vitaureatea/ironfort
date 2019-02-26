@@ -1,13 +1,17 @@
 from django.shortcuts import render,redirect,HttpResponse
+from django.http import FileResponse,JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from . import models
-import random,os
+import random,os,paramiko,datetime
 from PIL import Image
 from .server import WSSHBridge,add_log
+
+current_path = os.path.abspath(__file__)
+father_path = os.path.abspath(os.path.dirname(current_path) + os.path.sep + "..")
 
 
 
@@ -172,10 +176,70 @@ def get_log(request):
         return redirect('/index/')
 
 
-def host_mgr(request):
+# def host_mgr(request):
+#     pro = models.UserInfo.objects.filter(user=request.user)
+#     remote_user_bind_host = models.RemoteUserBindHost.objects.filter(
+#         Q(enabled=True),
+#         Q(userprofile__user=request.user) | Q(group__userprofile__user=request.user)
+#     ).distinct()
+#     return render(request,'host_mgr.html',{'remote_user_bind_host': remote_user_bind_host ,'pro': pro})
+
+@login_required(login_url='/login/')
+def upload_file(request):
     pro = models.UserInfo.objects.filter(user=request.user)
     remote_user_bind_host = models.RemoteUserBindHost.objects.filter(
         Q(enabled=True),
         Q(userprofile__user=request.user) | Q(group__userprofile__user=request.user)
     ).distinct()
-    return render(request,'host_mgr.html',{'remote_user_bind_host': remote_user_bind_host ,'pro': pro})
+    if request.method == 'POST':
+        if request.POST.get('ip') and request.POST.get('path'):
+            print(request.POST)
+            ips = request.POST['ip'].split(',')
+            upfile = request.FILES['file']
+            print(upfile)
+            nowTime = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M')
+            filename = nowTime + '_' + upfile.name
+            full_path =father_path +'/files/' + str(filename)
+
+            with open(full_path, 'wb') as file:
+                for chunk in upfile.chunks():
+                    file.write(chunk)
+
+            if request.POST['path'][-1] != '/':
+                rpath = request.POST['path'] + '/' +filename
+            else:
+                rpath = request.POST['path'] + filename
+
+            try:
+                for item in ips:
+                    f_pro = models.RemoteUserBindHost.objects.get(host__ip=item)
+                    print(full_path,rpath)
+                    t = paramiko.Transport((item,f_pro.host.port))
+                    t.connect(username=f_pro.remote_user.remote_user_name,password=f_pro.remote_user.password)
+                    sftp = paramiko.SFTPClient.from_transport(t)
+                    sftp.put(full_path,rpath)
+                    t.close()
+            except Exception as e:
+                print(e)
+        else:
+            print(request.POST)
+            gip = request.POST['gip']
+            gpath = request.POST['gpath']
+            filename = gpath.split('/')[-1]
+            print(father_path+'/files/'+filename)
+            f_pro = models.RemoteUserBindHost.objects.get(host__ip=gip)
+            t = paramiko.Transport((gip, f_pro.host.port))
+            t.connect(username=f_pro.remote_user.remote_user_name, password=f_pro.remote_user.password)
+            sftp = paramiko.SFTPClient.from_transport(t)
+            sftp.get(gpath, father_path+'/files/'+filename)
+
+            return JsonResponse({
+                'path': 'files',
+                'filename': filename
+            })
+
+    return render(request, 'get_upload_file.html', {'remote_user_bind_host': remote_user_bind_host , 'pro': pro })
+
+
+def download(request):
+    pass

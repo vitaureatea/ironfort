@@ -3,7 +3,7 @@ from fort import models
 import os
 from django.db.models import Q
 from . import paramiko_ssh
-from .user import user_list
+
 
 class SshHandler(object):
     """堡垒机交互脚本"""
@@ -13,16 +13,11 @@ class SshHandler(object):
 
     def auth(self):
         '''认证程序'''
-        who = os.popen('whoami')
-        who = who.read().strip()
-        if who in user_list.keys():
-            username = who
-            password = user_list.get(who)
-        else:
-            count = 0
-            while count < 3:
-                username = input('堡垒机账户：').strip()
-                password = input('堡垒机密码：').strip()
+
+        count = 0
+        while count < 3:
+            username = input('堡垒机账户：').strip()
+            password = input('堡垒机密码：').strip()
 
         user = authenticate(username=username, password=password)
         if user:

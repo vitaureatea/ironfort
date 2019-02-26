@@ -1,6 +1,7 @@
 body {
     margin-top: 80px;
     background-image: url('login_background.jpg');
+    background-size:cover
 }
 
 .form-login {

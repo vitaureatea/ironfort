@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}文件管理{% endblock %}
+
+{% block css %}
+    <link href="{% static 'index.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block uimage %}
+{% for pr in pro %}
+<img src="../static/{{ pr.image }}" class="user-image" alt="User Image">
+{% endfor %}
+{% endblock %}
+
+{% block simage %}
+{% for pr in pro %}
+<img src="../static/{{ pr.image }}" class="img-circle" alt="User Image">
+{% endfor %}
+{% endblock %}
+
+{% block timage %}
+{% for pr in pro %}
+<img src="../static/{{ pr.image }}" class="img-circle" alt="User Image">
+{% endfor %}
+{% endblock %}
+
+{% block centent %}
+    <section class="content-header">
+      <h1>
+        文件传输
+        <small>File</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/index/"><i class="fa"></i>主页</a></li>
+        <li class="active">文件传输</li>
+      </ol>
+        <hr/>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="table-responsive">
+        <table id="host_table" class="table table-hover table-bordered table-striped">
+            <<thead>
+                <tr>
+                    <th>ip</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in remote_user_bind_host %}
+             <tr>
+                    <td><input  name="check" type="checkbox" value="{{ item.host.ip }}" />  {{ item.host.ip }}</td>
+             </tr>
+                {% endfor %}
+             </tbody>
+        </table>
+    </div>
+
+
+        <input class="btn btn-default" type="button" id="btn1" value="全选">
+        <input class="btn btn-default" type="button" id="btn2" value="取消全选">
+        <input class="btn btn-default" type="button" id="btn3" value="选中所有奇数">
+        <input class="btn btn-default" type="button" id="btn4" value="反选">
+
+        <br></br>
+
+        <div class="container">
+            <div class="col-md-4 col-md-offset-4">
+            <from  class="form-inline" id="form2" name="form2" role="form">
+                {% if message %}
+                <div class="alert alert-warning" role="alert">{{ message }}</div>
+                {% endif %}
+                <div class="form-group">
+		            <label class="sr-only" for="name">名称</label>
+		            <input type="text" class="form-control" id="path" placeholder="上传路径 仅单文件,压缩包"> 文件上传
+	            </div>
+                <div class="form-group">
+                    <label class="sr-only" for="inputfile">文件输入</label>
+                    <input type="file" id="fileUp" name="file">
+                </div>
+                <div class="checkbox">
+		        <label>
+			        <button type="submit" class="btn btn-default" >自动提交</button>
+                </label>
+                </div>
+            </from>
+            <br></br>
+
+             <from  class="form-inline" id="form2" name="form2" role="form">
+                <div class="form-group">
+		            <label class="sr-only" for="name">名称</label>
+		            <input type="text" class="form-control" id="gpath" placeholder="下载路径 仅单文件,压缩包"> 文件下载
+	            </div>
+                <div class="checkbox">
+		        <label>
+			        <button type="submit" class="btn btn-default" id="fileGet">提交</button>
+                </label>
+                </div>
+            </from>
+        </div>
+            </div>
+        </div>
+  </section>
+  <!-- /.content -->
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'term.js' %}"></script>
+    <script src="{% static 'ironssh.js' %}"></script>
+
+
+    <script>
+        $(function () {
+            $('#host_table').DataTable({
+              "paging": true,       <!-- 允许分页 -->
+              "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+              "searching": true,    <!-- 允许内容搜索 -->
+              "ordering": true,     <!-- 允许排序 -->
+              "info": true,         <!-- 显示信息 -->
+              "autoWidth": true
+            });
+        });
+    </script>
+
+    <script>
+    $("document").ready(function() {
+        $("#btn1").click(function () {
+            $("[name='check']").attr("checked", 'true');//全选
+        });
+        $("#btn2").click(function () {
+            $("[name='check']").removeAttr("checked");//取消全选
+        });
+        $("#btn3").click(function () {
+            $("[name='check']:even").attr("checked", 'true');//选中所有奇数
+        });
+        $("#btn4").click(function () {
+            $("[name='check']").each(function () {//反选
+                if ($(this).attr("checked")) {
+                    $(this).removeAttr("checked");
+                } else {
+                    $(this).attr("checked", 'true');
+                }
+            })
+        })
+    })
+    </script>
+
+<script>
+         var fileM = document.querySelector("#fileUp");
+        $("#fileUp").on("change", function () {
+            var chk_value =[];
+            $('input[name="check"]:checked').each(function () {
+                chk_value.push($(this).val());
+            });
+            //获取文件对象，files是文件选取控件的属性，存储的是文件选取控件选取的文件对象，类型是一个数组
+            var fileObj = fileM.files[0];
+            //创建formdata对象，formData用来存储表单的数据，表单数据时以键值对形式存储的。
+            var formData = new FormData();
+            formData.append('file', fileObj);
+            formData.append('ip', chk_value);
+            formData.append('path', $(" #path ").val());
+
+            $.ajax({
+                url: "/upfile/",
+                type: "post",
+                dataType: "json",
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (json_data) {
+
+                },
+                error:function(request){//请求失败之后的操作
+                    window.location.reload();
+                    setTimeout(refresh , 5000);
+                }
+            });
+            alert('数据提交成功！')
+        });
+    </script>
+
+    <script>
+
+        $("#fileGet").click(function () {
+             var chk_value =[];
+            $('input[name="check"]:checked').each(function () {
+                chk_value.push($(this).val());
+            });
+            var gpath = $(" #gpath ").val();
+            var formData = new FormData();
+            formData.append('gpath',gpath);
+            formData.append('gip',chk_value);
+
+            $.ajax({
+                url: "/upfile/",
+                type: "post",
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (request) {
+                    var path = request.path + "/" + request.filename;
+                    location.href = path
+                },
+                error:function(request){//请求失败之后的操作
+                     window.location.reload();
+                    setTimeout(refresh , 5000);
+                }
+            });
+
+        })
+    </script>
+
+{% endblock %}
