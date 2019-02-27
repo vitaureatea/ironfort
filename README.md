@@ -44,8 +44,9 @@ python manage.py migrate
 python manage.py createsuperuser 
 
 #启动
+#默认为 0.0.0.0:8000
 cd ironfort
-python manage.py runserver
+python start_jump.py
 ```
 ### 4.linux端的backend
 ```
