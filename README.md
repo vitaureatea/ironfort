@@ -48,11 +48,10 @@ cd ironfort
 python manage.py runserver
 ```
 ### 4.linux端的backend
-useradd newuser
-vim newuser/.bashrc  加入
 ```
+useradd newuser  
+vim newuser/.bashrc  加入：  
 python3 PATH/ironfort/bk_manage.py run
-
 logout
 ```
 通过登录newuser 即可触发脚本 
