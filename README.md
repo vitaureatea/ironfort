@@ -51,7 +51,9 @@ python manage.py runserver
 ```
 useradd newuser  
 vim newuser/.bashrc  加入：  
+
 python3 PATH/ironfort/bk_manage.py run
-logout
-```
+logout  
+
 通过登录newuser 即可触发脚本 
+```
