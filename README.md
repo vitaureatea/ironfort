@@ -1,5 +1,5 @@
 # Lj平台
-[![python3.x](https://img.shields.io/badge/python-3.4.8-blue.svg)](https://www.python.org/)
+[![python3.x](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/)
 [![django](https://img.shields.io/badge/django-2.0.8-blue.svg)](https://www.djangoproject.com/)
 
 
