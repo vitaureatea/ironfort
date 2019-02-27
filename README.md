@@ -32,6 +32,7 @@ pip install -r requirements.txt
 # 配置数据库
 settings.py 
 本项目使用mysql数据库，pymysql模块
+或者自带的 SQLIT 随便
 
 # 生成数据库文件
 python manage.py makemigrations 
