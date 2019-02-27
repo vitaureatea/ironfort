@@ -37,8 +37,7 @@ urlpatterns = [
 
     #资产：
     path('asset/',av.asset),
-]
-# ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 #让静态文件的路由 使用settings里的两个值，第二个值默认没有需要自己写，指定静态文件的目录位置
 #http://10.211.55.12:8000/static/plugins/jQuery/jquery-2.2.3.min.js
 #理解为 走 STATIC_URL匹配的(/static/)   就设定代码目录是 STATIC_ROOT ，好像nginx的 root指定location的代码目录

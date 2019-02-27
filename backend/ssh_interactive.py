@@ -13,19 +13,18 @@ class SshHandler(object):
 
     def auth(self):
         '''认证程序'''
-
         count = 0
         while count < 3:
             username = input('堡垒机账户：').strip()
             password = input('堡垒机密码：').strip()
 
-        user = authenticate(username=username, password=password)
-        if user:
-            self.user = user
-            return True
-        else:
-            count += 1
+            user = authenticate(username=username, password=password)
 
+            if user:
+                self.user = user
+                return True
+            else:
+                count += 1
 
     def interactive(self):
         if self.auth():

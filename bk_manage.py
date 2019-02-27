@@ -1,8 +1,5 @@
 import sys,os
 
-
-
-
 if __name__ == "__main__":
     #因为你的脚本不算是django的一部分，所以需要导入django的环境变量，详见django的manage
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ironfort.settings")
