@@ -44,7 +44,6 @@ python manage.py migrate
 python manage.py createsuperuser 
 
 #启动
-#默认为0.0.0.0：8000
 cd ironfort
 python manage.py runserver
 ```
