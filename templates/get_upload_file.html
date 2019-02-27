@@ -167,21 +167,25 @@
             $.ajax({
                 url: "/upfile/",
                 type: "post",
-                dataType: "json",
                 data: formData,
                 async: true,
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function (json_data) {
-
+                success: function (data) {
+                    if(!data.edata) {
+                        alert('上传成功！')
+                        window.location.reload();
+                        setTimeout(refresh , 5000);
+                    } else {
+                        alert(data.edata)
+                        window.location.reload();
+                        setTimeout(refresh , 5000);
+                    }
                 },
                 error:function(request){//请求失败之后的操作
-                    window.location.reload();
-                    setTimeout(refresh , 5000);
                 }
             });
-            alert('数据提交成功！')
         });
     </script>
 
@@ -201,20 +205,34 @@
                 url: "/upfile/",
                 type: "post",
                 data: formData,
-                async: false,
+                async: true,
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function (request) {
-                    var path = request.path + "/" + request.filename;
-                    location.href = path
+                success: function (data) {
+                    console.log(data);
+                    var path = data.path;
+                    var filename = data.filename;
+
+                    if (path&&filename) {
+                        if (!data.edata) {
+                            location.href = path + "/" + filename;
+                            alert('正在下载')
+
+                        } else {
+                            alert(data.edata)
+                            window.location.reload();
+                            setTimeout(refresh, 5000);
+                        }
+                    } else {
+                        alert('参数错误！')
+                        window.location.reload();
+                        setTimeout(refresh, 5000);
+                    }
                 },
                 error:function(request){//请求失败之后的操作
-                     window.location.reload();
-                    setTimeout(refresh , 5000);
                 }
             });
-
         })
     </script>
 

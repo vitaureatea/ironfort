@@ -37,7 +37,7 @@ def login(request):
             message = '登陆失败，账号或密码错误'
             return render(request, 'login.html', {'message': message})
     if request.method == 'GET':
-        if request.session.get('username') is not None:
+        if request.session.get('username'):
             return redirect('/index/')
         else:
             return render(request, 'login.html', locals())
@@ -221,25 +221,44 @@ def upload_file(request):
                     t.close()
             except Exception as e:
                 print(e)
-        else:
+                return JsonResponse(
+                    { 'edata': 'paramiko到服务错误' }
+                )
+        elif request.POST.get('gip') and request.POST.get('gpath'):
+
             print(request.POST)
             gip = request.POST['gip']
             gpath = request.POST['gpath']
             filename = gpath.split('/')[-1]
             print(father_path+'/files/'+filename)
-            f_pro = models.RemoteUserBindHost.objects.get(host__ip=gip)
-            t = paramiko.Transport((gip, f_pro.host.port))
-            t.connect(username=f_pro.remote_user.remote_user_name, password=f_pro.remote_user.password)
-            sftp = paramiko.SFTPClient.from_transport(t)
-            sftp.get(gpath, father_path+'/files/'+filename)
+            try:
+                f_pro = models.RemoteUserBindHost.objects.get(host__ip=gip)
+                t = paramiko.Transport((gip, f_pro.host.port))
+                t.connect(username=f_pro.remote_user.remote_user_name, password=f_pro.remote_user.password)
+                sftp = paramiko.SFTPClient.from_transport(t)
+                sftp.get(gpath, father_path+'/files/'+filename)
 
-            return JsonResponse({
-                'path': 'files',
-                'filename': filename
-            })
+                return JsonResponse({
+                    'path': 'files',
+                    'filename': filename
+                })
+            except Exception as e:
+                print(e)
+                return JsonResponse(
+                    { 'edata': 'paramiko到服务错误' }
+                )
+        else:
+            return JsonResponse(
+                {'edata': '参数错误'}
+            )
 
     return render(request, 'get_upload_file.html', {'remote_user_bind_host': remote_user_bind_host , 'pro': pro })
 
 
-def download(request):
-    pass
+@login_required(login_url='/login')
+def download(request,filename):
+    file = open(father_path+'/files/'+filename, 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="%s"' %filename
+    return response
