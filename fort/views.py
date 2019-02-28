@@ -9,6 +9,7 @@ from . import models
 import random,os,paramiko,datetime
 from PIL import Image
 from .server import WSSHBridge,add_log
+from sftp_conf import key_file_path
 
 current_path = os.path.abspath(__file__)
 father_path = os.path.abspath(os.path.dirname(current_path) + os.path.sep + "..")
@@ -212,10 +213,19 @@ def upload_file(request):
                     f_pro = models.RemoteUserBindHost.objects.get(host__ip=item)
                     print(full_path,rpath)
                     t = paramiko.Transport((item,f_pro.host.port))
-                    t.connect(username=f_pro.remote_user.remote_user_name,password=f_pro.remote_user.password)
+                    if f_pro.remote_user.password:
+                        t.connect(username=f_pro.remote_user.remote_user_name,password=f_pro.remote_user.password)
+                    else:
+                        private_key = paramiko.RSAKey.from_private_key_file(key_file_path)
+                        t.connect(username=f_pro.remote_user.remote_user_name, pkey=private_key)
                     sftp = paramiko.SFTPClient.from_transport(t)
                     sftp.put(full_path,rpath)
                     t.close()
+                    models.AccessLog.objects.create(
+                        user= request.user,
+                        log_type= 1,
+                        content= 'put file => %s' % rpath
+                    )
             except Exception as e:
                 print(e)
                 return JsonResponse(
@@ -231,9 +241,19 @@ def upload_file(request):
             try:
                 f_pro = models.RemoteUserBindHost.objects.get(host__ip=gip)
                 t = paramiko.Transport((gip, f_pro.host.port))
-                t.connect(username=f_pro.remote_user.remote_user_name, password=f_pro.remote_user.password)
+                if f_pro.remote_user.password:
+                    t.connect(username=f_pro.remote_user.remote_user_name, password=f_pro.remote_user.password)
+                else:
+                    private_key = paramiko.RSAKey.from_private_key_file(key_file_path)
+                    t.connect(username=f_pro.remote_user.remote_user_name, pkey=private_key)
                 sftp = paramiko.SFTPClient.from_transport(t)
                 sftp.get(gpath, father_path+'/files/'+filename)
+
+                models.AccessLog.objects.create(
+                    user=request.user,
+                    log_type=1,
+                    content='get file => %s' % gpath
+                )
 
                 return JsonResponse({
                     'path': 'files',
