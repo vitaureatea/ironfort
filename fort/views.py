@@ -36,11 +36,8 @@ def login(request):
         else:
             message = '登陆失败，账号或密码错误'
             return render(request, 'login.html', {'message': message})
-    if request.method == 'GET':
-        if request.session.get('username'):
-            return redirect('/index/')
-        else:
-            return render(request, 'login.html', locals())
+
+    return render(request, 'login.html', locals())
 
 
 
